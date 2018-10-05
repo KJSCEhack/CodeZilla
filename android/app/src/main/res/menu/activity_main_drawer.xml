@@ -5,18 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/your_reports"
             android:title="Your reports " />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/location_reports"
             android:title="Reports nearby !" />
+        <item
+            android:id="@+id/new_report"
+            android:title="New Report !" />
 
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/faq"
                 android:icon="@drawable/ic_menu_share"
                 android:title="FAQ" />
         </menu>
