@@ -21,14 +21,25 @@ public class Report {
 
     String mStatus;
 
+    double mLatitude, mLongitude;
+    int mReportDate;
 
-    public String getmStatus() { return mStatus; }
 
-    public void setmStatus(String mStatus) { this.mStatus = mStatus; }
+    public String getmStatus() {
+        return mStatus;
+    }
 
-    public long getUpvotes() { return upvotes; }
+    public void setmStatus(String mStatus) {
+        this.mStatus = mStatus;
+    }
 
-    public void setUpvotes(long upvotes) { this.upvotes = upvotes; }
+    public long getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(long upvotes) {
+        this.upvotes = upvotes;
+    }
 
     public String getUid() {
         return uid;
@@ -42,11 +53,13 @@ public class Report {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public Report(String title, String description, boolean volunteer, String selectedDate, String imageURL) {
+        mTitle = title;
+        mDescription = description;
+        mVolunteer = volunteer;
+        mDate = selectedDate;
+        mImageUrl = imageURL;
     }
-
-    double mLatitude, mLongitude;
 
     public String getImageUrl() {
         return mImageUrl;
@@ -104,8 +117,28 @@ public class Report {
         mLongitude = longitude;
     }
 
-    public ArrayList<String> getmVolunteers() { return mVolunteers; }
+    public ArrayList<String> getmVolunteers() {
+        return mVolunteers;
+    }
 
-    public void setmVolunteers(ArrayList<String> mVolunteers) { this.mVolunteers = mVolunteers; }
+    public void setmVolunteers(ArrayList<String> mVolunteers) {
+        this.mVolunteers = mVolunteers;
+    }
+
+    public String getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(String status) {
+        mStatus = status;
+    }
+
+    public int getReportDate() {
+        return mReportDate;
+    }
+
+    public void setReportDate(int reportDate) {
+        mReportDate = reportDate;
+    }
 
 }
