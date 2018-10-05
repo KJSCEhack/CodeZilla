@@ -20,6 +20,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String mVerificationCode;
     private String name, phone, password;
+
+    private List<User> mUsers = new List<User>();
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -109,6 +112,27 @@ public class MainActivity extends AppCompatActivity {
             mVerificationCode = s;
         }
     };
+
+
+
+    ValueEventListener postListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            // Get Post object and use the values to update the UI
+            Post post = dataSnapshot.getValue(Post.class);
+            // ...
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            // ...
+        }
+    };
+
+
+mPostReference.addValueEventListener(postListener);
 
     private void verifyCode(String code) {
 
