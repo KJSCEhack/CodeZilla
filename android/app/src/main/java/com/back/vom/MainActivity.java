@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
-        Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
-
+        Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");m.....b
         setContentView(R.layout.activity_main);
 
         database = FirebaseDatabase.getInstance();

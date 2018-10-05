@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.back.vom.MainActivity;
 import com.back.vom.R;
-import com.back.vom.models.Report;
 import com.google.firebase.database.DatabaseReference;
 
 /**
