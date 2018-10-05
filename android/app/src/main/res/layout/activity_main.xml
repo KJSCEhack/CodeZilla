@@ -23,13 +23,4 @@
         app:menu="@menu/activity_main_drawer" />
 
 
-    <LinearLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-
-    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

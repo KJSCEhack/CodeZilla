@@ -21,6 +21,19 @@ public class Report {
 
     String mStatus;
 
+
+    public ArrayList<String> getVolunteers() {
+        return mVolunteers;
+    }
+
+    public void setVolunteers(ArrayList<String> volunteers) {
+        mVolunteers = volunteers;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     double mLatitude, mLongitude;
     int mReportDate;
 
