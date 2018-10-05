@@ -10,7 +10,7 @@
         android:text="Your Reports"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/location_reports_recyclerview"
+        android:id="@+id/yout_reports_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

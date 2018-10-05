@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.back.vom.R;
 import com.back.vom.adapters.YourReportsAdapter;
@@ -23,9 +22,7 @@ import java.util.List;
  */
 public class YourReports extends Fragment {
 
-    /**
-     * The constant TAG for logs.
-     */
+
     private static final String TAG = YourReports.class.getSimpleName();
 
     /**
@@ -61,7 +58,7 @@ public class YourReports extends Fragment {
         mView = inflater.inflate(R.layout.yourreports, container, false);
 
 
-        mYourReportsRecyclerView = mView.findViewById(R.id.location_reports_recyclerview);
+        mYourReportsRecyclerView = mView.findViewById(R.id.yout_reports_recyclerview);
         data.clear();
         data.add("report 1");
         data.add("report 2");

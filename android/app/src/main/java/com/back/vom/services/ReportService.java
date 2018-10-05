@@ -15,8 +15,8 @@ import com.google.firebase.database.ValueEventListener;
 public class ReportService {
 
 
-    DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference("reports");
-    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+    static DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference("reports");
+    static DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
 
     public void createReport(Report report, DatabaseReference.CompletionListener listener) {
@@ -40,10 +40,11 @@ public class ReportService {
 
             }
         });
+    }
 
 
-
-
+    public static void getAllReports(ValueEventListener listener) {
+        reportsRef.addListenerForSingleValueEvent(listener);
     }
 
 
