@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.back.vom.MainActivity;
 import com.back.vom.R;
-import com.back.vom.models.Report;
-import com.google.firebase.database.DatabaseReference;
 
 /**
  * The type Sign up step one fragment.
@@ -43,7 +40,7 @@ public class NewReports extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         titleEditText = getView().findViewById(R.id.reportTitle);
-        commentEditText = getView().findViewById(R.id.reportComment);
+        commentEditText = getView().findViewById(R.id.reportDescription);
 
         title = titleEditText.getText().toString();
         comment = commentEditText.getText().toString();
