@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
+
         setContentView(R.layout.activity_main);
 
         LayoutInflater li = LayoutInflater.from(MainActivity.this);

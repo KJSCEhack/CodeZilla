@@ -1,19 +1,17 @@
 package com.back.vom.models;
 
-import android.widget.EditText;
-
 public class Report {
 
-        String mImageUrl;
-        String mTitle;
-        String mDescription;
+    String mImageUrl;
+    String mTitle;
+    String mDescription;
 
-        Boolean mVolunteer;
-        String mDate;
+    Boolean mVolunteer;
+    String mDate;
 
-        double mLatitude, mLongitude;
+    double mLatitude, mLongitude;
+    int mStatus, mReportDate;
 
-        int mStatus, mReportDate;
     public Report(String title, String description, boolean volunteer, String selectedDate, String imageURL) {
         mTitle = title;
         mDescription = description;
@@ -77,4 +75,22 @@ public class Report {
     public void setLongitude(double longitude) {
         mLongitude = longitude;
     }
+
+    public int getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(int status) {
+        mStatus = status;
+    }
+
+    public int getReportDate() {
+        return mReportDate;
+    }
+
+    public void setReportDate(int reportDate) {
+        mReportDate = reportDate;
+    }
+
+
 }

@@ -12,6 +12,9 @@ import android.widget.EditText;
 
 import com.back.vom.R;
 
+import com.google.firebase.database.DatabaseReference;
+
+
 /**
  * The type Sign up step one fragment.
  */
