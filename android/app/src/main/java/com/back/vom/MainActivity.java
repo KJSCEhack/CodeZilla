@@ -1,10 +1,12 @@
 package com.back.vom;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,11 +21,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -35,9 +39,16 @@ import com.back.vom.models.Report;
 import com.back.vom.utils.DialogBoxBuilder;
 import com.back.vom.utils.InitFragment;
 import com.bugsee.library.Bugsee;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
@@ -52,7 +63,8 @@ public class MainActivity extends AppCompatActivity
     RadioButton volunterRadioButton, yes, no;
     RadioGroup radioGroup;
     View promptsView;
-
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    private ProgressBar mProgressBar;
     EditText mTitle, mDescription;
     TextView mDate;
 
@@ -263,5 +275,103 @@ public class MainActivity extends AppCompatActivity
             Picasso.get().load(mUri).into(mPreviewImage);
         }
 
+    }
+
+    private void uploadFile() {
+
+        String fileName = System.currentTimeMillis() + "." + getFileExtension(mUri);
+        final String path = "uploads/" + fileName;
+
+        StorageReference storageRef = storage.getReference();
+
+        final StorageReference productImage =  storageRef.child(path);
+        final UploadTask uploadTask = productImage.putFile(mUri);
+
+
+        Task<Uri> urlTask = uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                mProgressBar.setProgress((int) progress);
+            }
+        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return productImage.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    //AddProduct(downloadUri.toString());
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressBar.setProgress(0);
+                            Toast.makeText(MainActivity.this, "File Uploaded", Toast.LENGTH_SHORT).show();
+                            if (mDialog.isShowing()){
+                                //mDialog.dismiss();
+                                mUri = null;
+                            }
+                        }
+                    }, 500);
+
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
+
+        /*
+        uploadTask
+                .addOnSuccessListener(AdminDisplayProductActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+
+                        storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                downloadUrl = uri.toString();
+                                //         AddProduct(downloadUrl);
+
+                                Toast.makeText(AdminDisplayProductActivity.this, "Uploaded !" + downloadUrl, Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+
+                        Toast.makeText(AdminDisplayProductActivity.this, "File Uploaded"
+                                , Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AdminDisplayProductActivity.this, "Upload Fail !", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        mProgressBar.setProgress((int) progress);
+                    }
+                });
+*/
+    }
+
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 }
