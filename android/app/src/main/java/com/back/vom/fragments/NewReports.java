@@ -273,7 +273,7 @@ public class NewReports extends Fragment {
                     //AddProduct(downloadUri.toString());
                     //add report
                     //
-                    //            new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, "");
+                    // new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, "");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
