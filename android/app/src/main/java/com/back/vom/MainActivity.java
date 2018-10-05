@@ -18,23 +18,35 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.back.vom.fragments.LocationReports;
+import com.back.vom.fragments.NewReports;
 import com.back.vom.fragments.YourReports;
+import com.back.vom.models.Report;
 import com.back.vom.utils.DialogBoxBuilder;
 import com.back.vom.utils.InitFragment;
 import com.bugsee.library.Bugsee;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     YourReports mYourReports = new YourReports();
     LocationReports mLocationReports = new LocationReports();
+    NewReports mNewReports = new NewReports();
     Dialog mDialog;
+
+    public FirebaseDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
+
         setContentView(R.layout.activity_main);
 
+        database = FirebaseDatabase.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,6 +63,9 @@ public class MainActivity extends AppCompatActivity
                                         "submit", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+
+                                                sendComment(mNewReports.title, mNewReports.comment);
+
                                                 Toast.makeText(MainActivity.this, "Submit", Toast.LENGTH_SHORT).show();
                                             }
                                         }, "",
@@ -122,5 +137,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public DatabaseReference getDatabaseReference() {
+        return database.getReference();
+    }
+
+    public void sendComment(String title, String comment) {
+        Report report = new Report(title, comment);
+        database.getReference().child("reports").child("nachiketbhuta").setValue(report);
     }
 }

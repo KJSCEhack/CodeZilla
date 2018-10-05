@@ -8,39 +8,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import com.back.vom.MainActivity;
 import com.back.vom.R;
+import com.back.vom.models.Report;
+import com.google.firebase.database.DatabaseReference;
 
 /**
  * The type Sign up step one fragment.
  */
 public class NewReports extends Fragment {
 
-    /**
-     * The constant TAG for logs.
-     */
     private static final String TAG = NewReports.class.getSimpleName();
-
-    /**
-     * The M view to inflate the fragment view .
-     */
     private View mView;
+    public EditText titleEditText, commentEditText;
+    public String title, comment;
 
-    /**
-     * Instantiates a new Sign up step one fragment.
-     */
     public NewReports() {
     }
 
-    /**
-     * This method is used to display the step one fragment for signUp with User id,
-     * Email id & Parent's Phone no.
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,8 +38,18 @@ public class NewReports extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        titleEditText = getView().findViewById(R.id.reportTitle);
+        commentEditText = getView().findViewById(R.id.reportComment);
+
+        title = titleEditText.getText().toString();
+        comment = commentEditText.getText().toString();
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
     }
-
 }
