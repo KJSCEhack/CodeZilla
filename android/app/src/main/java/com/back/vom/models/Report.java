@@ -26,7 +26,6 @@ public class Report {
 
     long upvotes;
 
-
     String mStatus;
 
     String mRating;
