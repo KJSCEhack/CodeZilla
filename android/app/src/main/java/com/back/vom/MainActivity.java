@@ -1,13 +1,6 @@
 package com.back.vom;
 
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,65 +13,32 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.back.vom.fragments.LocationReports;
+import com.back.vom.fragments.NewReports;
 import com.back.vom.fragments.YourReports;
-import com.back.vom.models.Report;
-import com.back.vom.utils.DialogBoxBuilder;
 import com.back.vom.utils.InitFragment;
 import com.bugsee.library.Bugsee;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+
 
     public FirebaseDatabase database;
     YourReports mYourReports = new YourReports();
     LocationReports mLocationReports = new LocationReports();
+    NewReports mNewReports = new NewReports();
     AlertDialog mDialog;
-    RadioButton volunterRadioButton, yes, no;
-    RadioGroup radioGroup;
+
     View promptsView;
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    private ProgressBar mProgressBar;
-    EditText mTitle, mDescription;
-    TextView mDate;
-
-    CalendarView mCalendarView;
-
-    String mSelectedDate = "";
-    private boolean mVolunteer = false;
-
-    Button mBrowseButton;
-    private Uri mUri = null;
-
-    ImageView mPreviewImage;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,72 +55,23 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
-        LayoutInflater li = LayoutInflater.from(MainActivity.this);
-        promptsView = li.inflate(R.layout.infodialog, null);
-
-        database = FirebaseDatabase.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        radioGroup = promptsView.findViewById(R.id.radioGroup);
-        mCalendarView = promptsView.findViewById(R.id.calendarView);
-
-        mTitle = promptsView.findViewById(R.id.reportTitle);
-        mDescription = promptsView.findViewById(R.id.reportDescription);
-
-        yes = promptsView.findViewById(R.id.yesradiobutton);
-        no = promptsView.findViewById(R.id.noradiobutton);
-
-        mBrowseButton = promptsView.findViewById(R.id.browse_button);
-
-        mPreviewImage = promptsView.findViewById(R.id.preview_imageView);
 
         setSupportActionBar(toolbar);
 
-        mBrowseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
+
+
+         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                mDialog = DialogBoxBuilder.createDialogBox(MainActivity.this,
-                        "Describe your report",
-                        false,
-                        promptsView,
-                        "submit",
-                        null,
-                        "",
-                        null,
-                        "cancel", null,
-                        Resources.getSystem());
-                mDialog.show();
 
-                Window window = mDialog.getWindow();
-                window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-                Button positive = mDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                positive.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        //Do Your thing
-                        validateReport();
-                    }
-                });
-
-                Button negative = mDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                negative.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        //Do Your thing
-                        mDialog.cancel();
-                    }
-                });
             }
         });
 
@@ -175,27 +86,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (yes == promptsView.findViewById(checkedId)) {
-                    //TODO: make date button visible
-                    Toast.makeText(MainActivity.this, "yes", Toast.LENGTH_SHORT).show();
-                    mVolunteer = true;
-                } else {
-
-                }
-            }
-        });
-
-        mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int dayOfMonth) {
-                mSelectedDate = dayOfMonth + "-" + (month + 1) + "-" + year;
-                Toast.makeText(MainActivity.this, mSelectedDate, Toast.LENGTH_SHORT).show();
-
-            }
-        });
     }
 
     public void verifyUser() {
@@ -240,13 +130,20 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.your_reports) {
+            fab.setVisibility(View.VISIBLE);
             InitFragment.set(MainActivity.this, mYourReports);
             Toast.makeText(this, "Your reports", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.location_reports) {
+            fab.setVisibility(View.VISIBLE);
             InitFragment.set(MainActivity.this, mLocationReports);
             Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.new_report) {
+            fab.setVisibility(View.INVISIBLE);
+            InitFragment.set(MainActivity.this, mNewReports);
+            Toast.makeText(this, "New", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.faq) {
+            fab.setVisibility(View.VISIBLE);
             Toast.makeText(this, "FAQ", Toast.LENGTH_SHORT).show();
         }
 
@@ -255,142 +152,5 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public DatabaseReference getDatabaseReference() {
-        return database.getReference();
-    }
 
-
-    private void validateReport() {
-
-        int selectedId = radioGroup.getCheckedRadioButtonId();
-
-        if (mTitle.getText().toString().equals(""))
-            Toast.makeText(this, "Please enter title !", Toast.LENGTH_SHORT).show();
-        else if (mDescription.getText().toString().equals(""))
-            Toast.makeText(this, "Please enter description !", Toast.LENGTH_SHORT).show();
-        else if (selectedId == -1)
-            Toast.makeText(MainActivity.this, "Select Volunteer !", Toast.LENGTH_SHORT).show();
-        else if (mSelectedDate.equals("") && mVolunteer)
-            Toast.makeText(MainActivity.this, "Please Select date !", Toast.LENGTH_SHORT).show();
-        else
-            new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, "");
-
-    }
-
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            mUri = data.getData();
-            Picasso.get().load(mUri).into(mPreviewImage);
-        }
-
-    }
-
-    private void uploadFile() {
-
-        String fileName = System.currentTimeMillis() + "." + getFileExtension(mUri);
-        final String path = "uploads/" + fileName;
-
-        StorageReference storageRef = storage.getReference();
-
-        final StorageReference productImage =  storageRef.child(path);
-        final UploadTask uploadTask = productImage.putFile(mUri);
-
-
-        Task<Uri> urlTask = uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                mProgressBar.setProgress((int) progress);
-            }
-        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-                // Continue with the task to get the download URL
-                return productImage.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    //AddProduct(downloadUri.toString());
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProgressBar.setProgress(0);
-                            Toast.makeText(MainActivity.this, "File Uploaded", Toast.LENGTH_SHORT).show();
-                            if (mDialog.isShowing()){
-                                //mDialog.dismiss();
-                                mUri = null;
-                            }
-                        }
-                    }, 500);
-
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        });
-
-        /*
-        uploadTask
-                .addOnSuccessListener(AdminDisplayProductActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-
-                        storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                downloadUrl = uri.toString();
-                                //         AddProduct(downloadUrl);
-
-                                Toast.makeText(AdminDisplayProductActivity.this, "Uploaded !" + downloadUrl, Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-
-                        Toast.makeText(AdminDisplayProductActivity.this, "File Uploaded"
-                                , Toast.LENGTH_SHORT).show();
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AdminDisplayProductActivity.this, "Upload Fail !", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        mProgressBar.setProgress((int) progress);
-                    }
-                });
-*/
-    }
-
-
-    private String getFileExtension(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
 }
