@@ -46,9 +46,9 @@ public class DialogBoxBuilder {
                 .setCancelable(cancelable);
 
 
-        if (negativeButton != null && negativeButtonTitle != null)
+
             alertDialogBuilder.setNegativeButton(negativeButtonTitle, negativeButton);
-        if (positiveButton != null && positiveButtonTitle != null)
+
             alertDialogBuilder.setPositiveButton(positiveButtonTitle, positiveButton);
         if (neutralButton != null && neutralButtonTitle != null)
             alertDialogBuilder.setNeutralButton(neutralButtonTitle, neutralButton);

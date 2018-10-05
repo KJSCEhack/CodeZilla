@@ -17,20 +17,31 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout registerLL;
     private AppCompatEditText nameEditText;
     private AppCompatEditText phoneEditText;
+    private AppCompatEditText passwordEditText;
     private AppCompatEditText codeEditText;
     private AppCompatButton verifyButton;
 
     private String mVerificationCode;
+    private String name, phone, password;
+
+    private List<User> mUsers = new List<User>();
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private User mUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         registerLL = findViewById(R.id.register_ll);
         nameEditText = findViewById(R.id.name_et);
         phoneEditText = findViewById(R.id.phone_et);
+        passwordEditText = findViewById(R.id.password_et);
         codeEditText = findViewById(R.id.code_et);
         codeEditText.setVisibility(View.GONE);
         verifyButton = findViewById(R.id.verify_bt);
@@ -48,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String name = nameEditText.getText().toString();
-                String phone = phoneEditText.getText().toString();
+                name = nameEditText.getText().toString();
+                phone = phoneEditText.getText().toString();
+                password = passwordEditText.getText().toString();
                 Toast.makeText(MainActivity.this, "Code Sent!", Toast.LENGTH_SHORT).show();
 
                 nameEditText.setVisibility(View.GONE);
@@ -100,6 +113,27 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+
+    ValueEventListener postListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            // Get Post object and use the values to update the UI
+            Post post = dataSnapshot.getValue(Post.class);
+            // ...
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            // ...
+        }
+    };
+
+
+mPostReference.addValueEventListener(postListener);
+
     private void verifyCode(String code) {
 
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationCode, code);
@@ -115,6 +149,10 @@ public class MainActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
 
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    mUser = new User(name, phone, password);
+
+                    mDatabase.child("users").child(phone).setValue(mUser);
                 }
             }
         });
