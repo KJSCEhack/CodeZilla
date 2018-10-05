@@ -21,6 +21,8 @@ import com.back.vom.fragments.YourReports;
 import com.back.vom.utils.InitFragment;
 import com.bugsee.library.Bugsee;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -43,6 +45,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
+
+        verifyUser();
+
+
+
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -77,6 +86,16 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+    }
+
+    public void verifyUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if(user == null) {
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
+        }
     }
 
     @Override

@@ -84,7 +84,6 @@ public class YourReportsAdapter extends RecyclerView.Adapter<YourReportsAdapter.
 
             mTitle = itemView.findViewById(R.id.title);
             mDescription = itemView.findViewById(R.id.description);
-
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.back.vom.models;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,10 @@ public class Report {
 
     public ArrayList<String> mVolunteers = new ArrayList<String>();
 
+    public ArrayList<Comment> mComments = new ArrayList<Comment>();
+
+    public static final String TAG = Report.class.getSimpleName();
+
     String createdBy;
     String uid;
 
@@ -21,6 +28,8 @@ public class Report {
 
     String mStatus;
 
+    String mRating;
+    String mReview;
 
     public ArrayList<String> getVolunteers() {
         return mVolunteers;
@@ -30,13 +39,48 @@ public class Report {
         mVolunteers = volunteers;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 
     double mLatitude, mLongitude;
     int mReportDate;
 
+
+
+
+    public Report(String title, String description, boolean volunteer, String selectedDate, String imageURL) {
+        mTitle = title;
+        mDescription = description;
+        mVolunteer = volunteer;
+        mDate = selectedDate;
+        mImageUrl = imageURL;
+    }
+
+
+
+
+    public String getmRating() {
+        return mRating;
+    }
+
+    public void setmRating(String mRating) {
+        if (mStatus.equalsIgnoreCase("RESOLVED"))
+        this.mRating = mRating;
+        else Log.d(TAG, "Report isn't still Resolved!");
+    }
+
+    public String getmReview() {
+        return mReview;
+    }
+
+    public void setmReview(String mReview) {
+        if (mStatus.equalsIgnoreCase("RESOLVED"))
+        this.mReview = mReview;
+        else Log.d(TAG, "Report isn't still Resolved!");
+    }
+
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public String getmStatus() {
         return mStatus;
@@ -64,14 +108,6 @@ public class Report {
 
     public String getCreatedBy() {
         return createdBy;
-    }
-
-    public Report(String title, String description, boolean volunteer, String selectedDate, String imageURL) {
-        mTitle = title;
-        mDescription = description;
-        mVolunteer = volunteer;
-        mDate = selectedDate;
-        mImageUrl = imageURL;
     }
 
     public String getImageUrl() {
@@ -134,6 +170,14 @@ public class Report {
         return mVolunteers;
     }
 
+    public ArrayList<Comment> getmComments() {
+        return mComments;
+    }
+
+    public void setmComments(ArrayList<Comment> mComments) {
+        this.mComments = mComments;
+    }
+
     public void setmVolunteers(ArrayList<String> mVolunteers) {
         this.mVolunteers = mVolunteers;
     }
@@ -153,5 +197,4 @@ public class Report {
     public void setReportDate(int reportDate) {
         mReportDate = reportDate;
     }
-
 }
