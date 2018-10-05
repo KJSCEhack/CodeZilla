@@ -1,41 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".RegisterActivity">
 
+    <LinearLayout
+        android:padding="70dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <EditText
         android:id="@+id/name_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:hint="Name"/>
+        android:hint="@string/name_et"/>
+
     <EditText
         android:id="@+id/phone_et"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="phone"
-        android:hint="Phone Number"/>
+        android:maxLength="10"
+        android:hint="@string/phoneNo_et"/>
+
     <EditText
         android:id="@+id/email_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:hint="Email"/>
+        android:hint="@string/email_et"/>
 
+        <!--
     <Button
         android:id="@+id/submit_bt"
-        android:text="Register"
+        android:text="@string/register_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="submit"/>
+        -->
+
+        <LinearLayout
+            android:id="@+id/button_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="30dp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/submit_bt"
+                android:onClick="submit"
+                android:text="@string/register_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <Button
+                android:text="@string/login_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
 
 
-
+    </LinearLayout>
 
 </LinearLayout>

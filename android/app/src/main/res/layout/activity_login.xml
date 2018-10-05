@@ -1,26 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".LoginActivity">
-    <EditText
-        android:hint="Phone number"
-        android:id="@+id/phone_et"
+
+    <LinearLayout
+        android:id="@+id/login_ll"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="50dp"
+        android:orientation="vertical">
+
+    <EditText
+        android:hint="@string/phoneNo_et"
+        android:id="@+id/phone_et"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/button_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:orientation="horizontal">
+
 
     <Button
         android:onClick="submit"
-        android:text="Submit"
+        android:text="@string/login_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
     <Button
         android:onClick="register"
-        android:text="Register"
+        android:text="@string/register_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    </LinearLayout>
+
 </LinearLayout>
