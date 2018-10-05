@@ -1,0 +1,3 @@
+function getTotalReports() {
+    axios.get('')
+}
