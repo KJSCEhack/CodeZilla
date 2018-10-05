@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
-        Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");m.....b
+        Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
         setContentView(R.layout.activity_main);
 
         database = FirebaseDatabase.getInstance();
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
 
-                                                sendComment(mNewReports.title, mNewReports.comment);
+                                                //sendComment(mNewReports.title, mNewReports.comment);
 
                                                 Toast.makeText(MainActivity.this, "Submit", Toast.LENGTH_SHORT).show();
                                             }
@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity
         return database.getReference();
     }
 
-    public void sendComment(String title, String comment) {
+    /*public void sendComment(String title, String comment) {
         Report report = new Report(title, comment);
         database.getReference().child("reports").child("nachiketbhuta").setValue(report);
-    }
+    }*/
 }

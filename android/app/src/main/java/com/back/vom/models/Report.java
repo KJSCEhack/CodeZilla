@@ -1,5 +1,8 @@
 package com.back.vom.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Report {
 
     String mImageUrl;
@@ -9,8 +12,23 @@ public class Report {
     Boolean mVolunteer;
     String mDate;
 
+    public ArrayList<String> mVolunteers = new ArrayList<String>();
+
     String createdBy;
     String uid;
+
+    long upvotes;
+
+    String mStatus;
+
+
+    public String getmStatus() { return mStatus; }
+
+    public void setmStatus(String mStatus) { this.mStatus = mStatus; }
+
+    public long getUpvotes() { return upvotes; }
+
+    public void setUpvotes(long upvotes) { this.upvotes = upvotes; }
 
     public String getUid() {
         return uid;
@@ -85,4 +103,9 @@ public class Report {
     public void setLongitude(double longitude) {
         mLongitude = longitude;
     }
+
+    public ArrayList<String> getmVolunteers() { return mVolunteers; }
+
+    public void setmVolunteers(ArrayList<String> mVolunteers) { this.mVolunteers = mVolunteers; }
+
 }
