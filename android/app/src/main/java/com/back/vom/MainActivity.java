@@ -1,5 +1,8 @@
 package com.back.vom;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -9,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +23,16 @@ import com.bugsee.library.Bugsee;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    YourReports mYourReports = new YourReports();
+    LocationReports mLocationReports = new LocationReports();
+    Dialog mDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,8 +40,27 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Report", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                LayoutInflater li = LayoutInflater.from(MainActivity.this);
+                View promptsView = li.inflate(R.layout.infodialog, null);
+                                mDialog = DialogBoxBuilder.createDialogBox(MainActivity.this,
+                                        "Describe your report", false,
+                                        promptsView,
+                                        "submit", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(MainActivity.this, "Submit", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }, "",
+                                        null,
+                                        "cancel", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                mDialog.cancel();
+                                                Toast.makeText(MainActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+                                            }
+                                        },
+                                        Resources.getSystem());
+                                mDialog.show();
             }
         });
 
@@ -58,22 +86,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        /*if (id == R.id.action_settings) {
+            return false;
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -81,19 +104,19 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            InitFragment.set(MainActivity.this,mYourReports);
             Toast.makeText(this, "Your reports", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_gallery) {
+            InitFragment.set(MainActivity.this,mLocationReports);
             Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_share) {
             Toast.makeText(this, "FAQ", Toast.LENGTH_SHORT).show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
