@@ -8,4 +8,12 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <LinearLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"/>
+
+
 </android.support.constraint.ConstraintLayout>

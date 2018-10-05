@@ -31,6 +31,15 @@ public class Report {
     String mRating;
     String mReview;
 
+    public ArrayList<String> getVolunteers() {
+        return mVolunteers;
+    }
+
+    public void setVolunteers(ArrayList<String> volunteers) {
+        mVolunteers = volunteers;
+    }
+
+
     double mLatitude, mLongitude;
     int mReportDate;
 
