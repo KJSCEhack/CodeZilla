@@ -43,6 +43,8 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -83,6 +85,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         FirebaseApp.initializeApp(this);
         Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
+
+        verifyUser();
+
+
+
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -187,6 +196,16 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    public void verifyUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if(user == null) {
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
+        }
     }
 
     @Override

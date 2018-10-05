@@ -13,7 +13,6 @@ public class UserService  {
 
 
 
-
     public static void createUser(FirebaseUser user, String name, String phone, String email, DatabaseReference.CompletionListener listener){
         usersRef
                 .child(user.getUid())
