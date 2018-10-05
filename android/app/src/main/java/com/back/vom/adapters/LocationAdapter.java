@@ -59,7 +59,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
      */
     @Override
     public void onBindViewHolder(LocationAdapterViewHolder holder, int position) {
-        holder.mTitle.setText(mData.get(position).getTitle());
+        holder.mTitle.setText(mData.get(position).getCategory());
         holder.itemView.setTag(mData.get(position));
     }
 
@@ -122,9 +122,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
 
         }
-
-
-
 
     }
 }

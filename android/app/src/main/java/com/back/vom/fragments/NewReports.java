@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 
 import com.back.vom.MainActivity;
 import com.back.vom.R;
+import com.back.vom.models.Report;
+import com.back.vom.services.ReportService;
 import com.back.vom.utils.InitFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -210,7 +213,6 @@ public class NewReports extends Fragment {
 
             mUri = Uri.fromFile(finalFile);
 
-            Picasso.get().load(mUri).into(mPreviewImage);
 
         }
 
@@ -273,7 +275,10 @@ public class NewReports extends Fragment {
                     //AddProduct(downloadUri.toString());
                     //add report
                     //
-                    // new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, "");
+
+                    Log.d(TAG, "onComplete: "+downloadUri.toString());
+                    Report r  = new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, downloadUri.toString());
+                    ReportService.createReport(r);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

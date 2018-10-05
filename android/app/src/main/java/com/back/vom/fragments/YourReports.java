@@ -7,12 +7,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.back.vom.R;
 import com.back.vom.adapters.YourReportsAdapter;
+import com.back.vom.models.Report;
+import com.back.vom.services.ReportService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +45,7 @@ public class YourReports extends Fragment {
 
     YourReportsAdapter mYourReportsAdapter;
 
-    List<String> data = new ArrayList<>();
+    List<Report> data = new ArrayList<>();
     /**
      * This method is used to display the step one fragment for signUp with User id,
      * Email id & Parent's Phone no.
@@ -56,17 +60,37 @@ public class YourReports extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.yourreports, container, false);
-
-
         mYourReportsRecyclerView = mView.findViewById(R.id.yout_reports_recyclerview);
-        data.clear();
-        data.add("report 1");
-        data.add("report 2");
         mYourReportsAdapter = new YourReportsAdapter(data);
         mYourReportsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mYourReportsRecyclerView.setAdapter(mYourReportsAdapter);
 
+        getMyData();
         return mView;
+    }
+
+
+
+
+    public void getMyData() {
+        ReportService.getMyReports(new ReportService.CompleteListener() {
+            @Override
+            public void complete(Object object) {
+                Log.d(TAG, "complete: ");
+                if(object instanceof Exception) {
+                    Log.e(TAG, "complete: ", (Throwable) object);
+                } else {
+                    data.clear();
+                    data.addAll((List<Report>) object);
+                    for (Report r: data) {
+                        Log.d(TAG, "! complete: "+r.getCreatedBy());
+                    }
+
+
+                    mYourReportsAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override

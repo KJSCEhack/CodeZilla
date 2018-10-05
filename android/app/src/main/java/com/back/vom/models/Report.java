@@ -1,15 +1,13 @@
 package com.back.vom.models;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Report {
 
     String mImageUrl;
-    String mTitle;
+    String mCategory;
     String mDescription;
 
     Boolean mVolunteer;
@@ -26,7 +24,7 @@ public class Report {
 
     long upvotes;
 
-    String mStatus;
+    int mStatus;
 
     String mRating;
     String mReview;
@@ -43,11 +41,15 @@ public class Report {
     double mLatitude, mLongitude;
     int mReportDate;
 
+    Report() {
+
+    }
 
 
 
-    public Report(String title, String description, boolean volunteer, String selectedDate, String imageURL) {
-        mTitle = title;
+
+    public Report(String category, String description, boolean volunteer, String selectedDate, String imageURL) {
+        mCategory = category;
         mDescription = description;
         mVolunteer = volunteer;
         mDate = selectedDate;
@@ -62,7 +64,7 @@ public class Report {
     }
 
     public void setmRating(String mRating) {
-        if (mStatus.equalsIgnoreCase("RESOLVED"))
+        if (mStatus == 1)
         this.mRating = mRating;
         else Log.d(TAG, "Report isn't still Resolved!");
     }
@@ -71,22 +73,17 @@ public class Report {
         return mReview;
     }
 
-    public void setmReview(String mReview) {
-        if (mStatus.equalsIgnoreCase("RESOLVED"))
-        this.mReview = mReview;
-        else Log.d(TAG, "Report isn't still Resolved!");
-    }
 
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public String getmStatus() {
+    public int getmStatus() {
         return mStatus;
     }
 
-    public void setmStatus(String mStatus) {
+    public void setmStatus(int mStatus) {
         this.mStatus = mStatus;
     }
 
@@ -118,12 +115,12 @@ public class Report {
         mImageUrl = imageUrl;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getCategory() {
+        return mCategory;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public void setCategory(String category) {
+        mCategory = category;
     }
 
     public String getDescription() {
@@ -182,11 +179,11 @@ public class Report {
         this.mVolunteers = mVolunteers;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return mStatus;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         mStatus = status;
     }
 
