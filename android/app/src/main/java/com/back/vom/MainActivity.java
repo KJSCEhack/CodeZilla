@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.back.vom.fragments.LocationReports;
+import com.back.vom.fragments.YourReports;
+import com.back.vom.utils.DialogBoxBuilder;
+import com.back.vom.utils.InitFragment;
 import com.bugsee.library.Bugsee;
 
 public class MainActivity extends AppCompatActivity

@@ -1,10 +1,12 @@
-package com.back.vom;
+package com.back.vom.utils;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import com.back.vom.R;
 
 public class InitFragment {
 
