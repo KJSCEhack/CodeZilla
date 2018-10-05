@@ -47,6 +47,8 @@ public class NewReports extends Fragment {
 
         mView = inflater.inflate(R.layout.newreports, container, false);
 
+
+
         return mView;
     }
 

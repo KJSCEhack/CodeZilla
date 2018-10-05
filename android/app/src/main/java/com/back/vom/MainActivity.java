@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.back.vom.adapters.YourReportsAdapter;
 import com.back.vom.fragments.LocationReports;
 import com.back.vom.fragments.YourReports;
 import com.back.vom.utils.DialogBoxBuilder;
@@ -28,7 +30,9 @@ public class MainActivity extends AppCompatActivity
 
     YourReports mYourReports = new YourReports();
     LocationReports mLocationReports = new LocationReports();
+
     Dialog mDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
