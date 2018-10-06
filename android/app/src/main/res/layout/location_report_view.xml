@@ -18,11 +18,13 @@
         android:orientation="vertical"
         android:padding="10dp"
         android:weightSum="100">
+
         <ImageView
-            android:id="@+id/image_view_my"
-            android:layout_width="match_parent"
+            android:id="@+id/img_view_location"
+            android:layout_width="wrap_content"
             android:layout_height="250dp"
             android:src="@drawable/newamazon"/>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -31,8 +33,41 @@
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category"
+                android:text="Title"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" -location"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This area has high dumping !"/>
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/upvote_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Upvote"/>
+            <Button
+                android:id="@+id/view_bt"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

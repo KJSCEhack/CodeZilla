@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ReportActivity">
+
+
+    <ImageView
+        android:id="@+id/report_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:src="@drawable/newamazon" />
+
+    <View
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="2dp">
+    </View>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/upvote_bt"
+            android:text="Upvote"
+            android:onClick="upvote"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/volunteer_bt"
+            android:text="Volunteer"
+
+            android:onClick="volunteer"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/Comment_bt"
+            android:onClick="comment"
+            android:text="comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <View
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="2dp">
+    </View>
+
+    <TextView
+        android:id="@+id/report_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Category" />
+    <TextView
+        android:id="@+id/report_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Desc" />
+    <TextView
+        android:id="@+id/report_voluteers_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="No of Volunteers" />
+    <TextView
+        android:id="@+id/report_upvotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="No of Upvotes" />
+    <TextView
+    android:id="@+id/report_voluteers_date"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:text="Volunteer date" />
+    <TextView
+        android:id="@+id/report_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Comments" />
+    <ListView
+        android:id="@+id/comment_lv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></ListView>
+
+
+
+</LinearLayout>

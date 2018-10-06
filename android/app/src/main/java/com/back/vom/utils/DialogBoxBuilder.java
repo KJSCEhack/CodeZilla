@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
+import com.back.vom.R;
+
 /**
  * The type Dialog box builder.
  */
@@ -39,7 +41,7 @@ public class DialogBoxBuilder {
                                               String negativeButtonTitle, DialogInterface.OnClickListener negativeButton,
                                               Resources resources) {
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         alertDialogBuilder.setView(promptsView);
         alertDialogBuilder
                 .setTitle(title)

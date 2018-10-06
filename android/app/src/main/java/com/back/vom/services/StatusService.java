@@ -11,7 +11,7 @@ public class StatusService {
     //DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
 
-    public void changeStatus(Report report, String status, DatabaseReference.CompletionListener listener) {
+    public void changeStatus(Report report, int status, DatabaseReference.CompletionListener listener) {
 
         report.setmStatus(status);
         reportsRef.child(report.getUid()).setValue(report,listener);

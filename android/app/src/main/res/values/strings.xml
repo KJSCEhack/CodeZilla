@@ -6,4 +6,15 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    // Login
+    <string name="phoneNo_et">Enter Your Phone Number</string>
+    <string name="login_bt">LOGIN</string>
+    <string name="register_bt">REGISTER</string>
+
+    // Register
+    <string name="name_et">Enter Your Name</string>
+    <string name="email_et">Enter Your Email</string>
+    <string name="title_activity_maps">Map</string>
+
 </resources>

@@ -1,12 +1,13 @@
 package com.back.vom.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class Report {
 
     String mImageUrl;
-    String mTitle;
+    String mCategory;
     String mDescription;
 
     Boolean mVolunteer;
@@ -14,22 +15,75 @@ public class Report {
 
     public ArrayList<String> mVolunteers = new ArrayList<String>();
 
+    public ArrayList<Comment> mComments = new ArrayList<Comment>();
+
+    public static final String TAG = Report.class.getSimpleName();
+
     String createdBy;
     String uid;
 
     long upvotes;
 
-    String mStatus;
+    int mStatus;
+
+    String mRating;
+    String mReview;
+
+    public ArrayList<String> getVolunteers() {
+        return mVolunteers;
+    }
+
+    public void setVolunteers(ArrayList<String> volunteers) {
+        mVolunteers = volunteers;
+    }
+
 
     double mLatitude, mLongitude;
     int mReportDate;
 
+    Report() {
 
-    public String getmStatus() {
+    }
+
+
+
+
+    public Report(String category, String description, boolean volunteer, String selectedDate, String imageURL) {
+        mCategory = category;
+        mDescription = description;
+        mVolunteer = volunteer;
+        mDate = selectedDate;
+        mImageUrl = imageURL;
+    }
+
+
+
+
+    public String getmRating() {
+        return mRating;
+    }
+
+    public void setmRating(String mRating) {
+        if (mStatus == 1)
+        this.mRating = mRating;
+        else Log.d(TAG, "Report isn't still Resolved!");
+    }
+
+    public String getmReview() {
+        return mReview;
+    }
+
+
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getmStatus() {
         return mStatus;
     }
 
-    public void setmStatus(String mStatus) {
+    public void setmStatus(int mStatus) {
         this.mStatus = mStatus;
     }
 
@@ -53,14 +107,6 @@ public class Report {
         return createdBy;
     }
 
-    public Report(String title, String description, boolean volunteer, String selectedDate, String imageURL) {
-        mTitle = title;
-        mDescription = description;
-        mVolunteer = volunteer;
-        mDate = selectedDate;
-        mImageUrl = imageURL;
-    }
-
     public String getImageUrl() {
         return mImageUrl;
     }
@@ -69,12 +115,12 @@ public class Report {
         mImageUrl = imageUrl;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getCategory() {
+        return mCategory;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public void setCategory(String category) {
+        mCategory = category;
     }
 
     public String getDescription() {
@@ -121,15 +167,23 @@ public class Report {
         return mVolunteers;
     }
 
+    public ArrayList<Comment> getmComments() {
+        return mComments;
+    }
+
+    public void setmComments(ArrayList<Comment> mComments) {
+        this.mComments = mComments;
+    }
+
     public void setmVolunteers(ArrayList<String> mVolunteers) {
         this.mVolunteers = mVolunteers;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return mStatus;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         mStatus = status;
     }
 
@@ -140,5 +194,4 @@ public class Report {
     public void setReportDate(int reportDate) {
         mReportDate = reportDate;
     }
-
 }

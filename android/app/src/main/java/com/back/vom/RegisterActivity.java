@@ -5,12 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.back.vom.services.SFHandler;
 import com.back.vom.services.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -57,14 +60,26 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
 
     public void submit(View v ) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+91"+ mPhoneET.getText().toString() ,
-                60,
-                TimeUnit.SECONDS,
-                this,
-                mCallbacks);
+        String email = mEmailET.getText().toString();
+        String name = mNameET.getText().toString();
+        String phone = mPhoneET.getText().toString();
+
+        if(isValidEmail(email) && phone.length() == 10) {
+            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                    "+91"+ mPhoneET.getText().toString() ,
+                    60,
+                    TimeUnit.SECONDS,
+                    this,
+                    mCallbacks);
+        } else {
+            Toast.makeText(this, "Enter Valid info", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -99,7 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
                             changeUsersDetails(user);
-
                         } else {
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -113,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void changeUsersDetails(FirebaseUser user) {
         String email = mEmailET.getText().toString();
-        String name = mNameET.getText().toString();
+        final String name = mNameET.getText().toString();
         String phone = mPhoneET.getText().toString();
         UserService.createUser(user, name, phone, email, new DatabaseReference.CompletionListener() {
             @Override
@@ -121,6 +135,8 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                 Intent i  = new Intent(RegisterActivity.this,MainActivity.class);
                 startActivity(i);
+                SFHandler.save(RegisterActivity.this,"name",name);
+                finish();
             }
         });
     }
