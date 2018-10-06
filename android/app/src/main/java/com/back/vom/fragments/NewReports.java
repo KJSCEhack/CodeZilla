@@ -340,13 +340,15 @@ public class NewReports extends Fragment {
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        if(location == null) {
+                        if (location == null) {
                             Toast.makeText(getContext(), "GPS IS OFF", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getActivity(),MainActivity.class));
+                            startActivity(new Intent(getActivity(), MainActivity.class));
                             getActivity().finish();
+                        } else {
+                            mReport.setLatitude(location.getLatitude());
+                            mReport.setLongitude(location.getLongitude());
+
                         }
-                        mReport.setLatitude(location.getLatitude());
-                        mReport.setLongitude(location.getLongitude());
                     }
                 });
     }
