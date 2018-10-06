@@ -20,7 +20,7 @@
         android:weightSum="100">
         <ImageView
             android:id="@+id/image_view_my"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="250dp"
             android:src="@drawable/newamazon"/>
         <LinearLayout

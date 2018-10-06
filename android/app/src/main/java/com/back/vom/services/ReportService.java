@@ -17,7 +17,9 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.back.vom.models.Report.TAG;
 
@@ -43,15 +45,16 @@ public class ReportService {
         reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<Report>> t = new GenericTypeIndicator<List<Report>>(){};
-                List<Report> reportList = dataSnapshot.getValue(t);
-
+                GenericTypeIndicator<HashMap<String,Report>> t = new GenericTypeIndicator<HashMap<String,Report>>(){};
+                HashMap<String,Report> reportList = dataSnapshot.getValue(t);
                 List<Report> myList = new ArrayList<>();
-                for(Report report:reportList) {
-                    if(report.getCreatedBy().equals(uid)) {
-                        myList.add(report);
-                    }
+                for(Map.Entry<String, Report> entry : reportList.entrySet()) {
+                    String key = entry.getKey();
+                    Report value = entry.getValue();
+                    if(value.getCreatedBy().equals(uid))
+                        myList.add(value);
                 }
+
                 listener.complete(myList);
             }
 
@@ -66,9 +69,15 @@ public class ReportService {
         reportsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<Report>> t = new GenericTypeIndicator<List<Report>>(){};
-                List<Report> reportList = dataSnapshot.getValue(t);
-                listener.complete(reportList);
+                GenericTypeIndicator<HashMap<String,Report>> t = new GenericTypeIndicator<HashMap<String,Report>>(){};
+                HashMap<String,Report> reportList = dataSnapshot.getValue(t);
+                List<Report> myList = new ArrayList<>();
+                for(Map.Entry<String, Report> entry : reportList.entrySet()) {
+                    String key = entry.getKey();
+                    Report value = entry.getValue();
+                    myList.add(value);
+                }
+
             }
 
             @Override

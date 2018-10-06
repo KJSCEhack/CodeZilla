@@ -8,11 +8,11 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CommentService {
 
 
-    DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference("reports");
+   static  DatabaseReference reportsRef = FirebaseDatabase.getInstance().getReference("reports");
     //DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
 
-    public void addComment(Report report, Comment comment, DatabaseReference.CompletionListener listener) {
+    public static void addComment(Report report, Comment comment, DatabaseReference.CompletionListener listener) {
 
         report.mComments.add(comment);
         reportsRef.child(report.getUid()).setValue(report,listener);

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.back.vom.services.SFHandler;
 import com.back.vom.services.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -126,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void changeUsersDetails(FirebaseUser user) {
         String email = mEmailET.getText().toString();
-        String name = mNameET.getText().toString();
+        final String name = mNameET.getText().toString();
         String phone = mPhoneET.getText().toString();
         UserService.createUser(user, name, phone, email, new DatabaseReference.CompletionListener() {
             @Override
@@ -134,6 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                 Intent i  = new Intent(RegisterActivity.this,MainActivity.class);
                 startActivity(i);
+                SFHandler.save(RegisterActivity.this,"name",name);
                 finish();
             }
         });

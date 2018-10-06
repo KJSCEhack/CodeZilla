@@ -159,7 +159,6 @@ public class NewReports extends Fragment {
                                                   int monthOfYear, int dayOfMonth) {
 
                                mSelectedDate =  dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-
                                mDate.setText(mSelectedDate);
                                 Toast.makeText(getActivity(),mSelectedDate, Toast.LENGTH_SHORT).show();
                             }
@@ -171,7 +170,6 @@ public class NewReports extends Fragment {
         });
         return mView;
     }
-
 
     private void validateReport() {
 
@@ -298,44 +296,6 @@ public class NewReports extends Fragment {
                 }
             }
         });
-
-        /*
-        uploadTask
-                .addOnSuccessListener(AdminDisplayProductActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-
-                        storageRef.child(path).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                downloadUrl = uri.toString();
-                                //         AddProduct(downloadUrl);
-
-                                Toast.makeText(AdminDisplayProductActivity.this, "Uploaded !" + downloadUrl, Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-
-                        Toast.makeText(AdminDisplayProductActivity.this, "File Uploaded"
-                                , Toast.LENGTH_SHORT).show();
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AdminDisplayProductActivity.this, "Upload Fail !", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        mProgressBar.setProgress((int) progress);
-                    }
-                });
-*/
     }
 
 

@@ -14,6 +14,46 @@
         android:layout_height="200dp"
         tools:src="@drawable/newamazon" />
 
+    <View
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="2dp">
+    </View>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/upvote_bt"
+            android:text="Upvote"
+            android:onClick="upvote"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/volunteer_bt"
+            android:text="Volunteer"
+
+            android:onClick="volunteer"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/Comment_bt"
+            android:onClick="comment"
+            android:text="comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <View
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="2dp">
+    </View>
+
     <TextView
         android:id="@+id/report_category"
         android:layout_width="match_parent"

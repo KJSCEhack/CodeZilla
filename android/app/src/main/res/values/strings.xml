@@ -15,5 +15,6 @@
     // Register
     <string name="name_et">Enter Your Name</string>
     <string name="email_et">Enter Your Email</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

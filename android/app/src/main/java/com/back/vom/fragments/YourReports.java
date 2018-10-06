@@ -61,13 +61,15 @@ public class YourReports extends Fragment {
 
         mView = inflater.inflate(R.layout.yourreports, container, false);
         mYourReportsRecyclerView = mView.findViewById(R.id.yout_reports_recyclerview);
-        mYourReportsAdapter = new YourReportsAdapter(data);
+        mYourReportsAdapter = new YourReportsAdapter(data,getActivity());
         mYourReportsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mYourReportsRecyclerView.setAdapter(mYourReportsAdapter);
 
         getMyData();
         return mView;
     }
+
+
 
 
 
