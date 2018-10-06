@@ -145,12 +145,11 @@ function getComments(uid) {
                 return;
             }
             else {
-                
+
                 let keys = Object.keys(snapshot);
 
                 keys.forEach((report) => {
-                    if (snapshot[report].uid === uid)
-                    {
+                    if (snapshot[report].uid === uid) {
                         resolve(JSON.stringify(snapshot[report].mComments));
                         return;
                     }
@@ -173,12 +172,11 @@ function getReport(uid) {
                 return;
             }
             else {
-                
+
                 let keys = Object.keys(snapshot);
 
                 keys.forEach((report) => {
-                    if (snapshot[report].uid === uid)
-                    {
+                    if (snapshot[report].uid === uid) {
                         resolve(snapshot[report]);
                         return;
                     }
@@ -190,11 +188,26 @@ function getReport(uid) {
     })
 }
 
+function markAsDone(uid) {
+    return new Promise((resolve, reject) => {
+        var reportRef = db.ref('reports/' + uid);
+
+        reportRef.update({
+            status: 1
+        });
+
+        resolve();
+    }, function (err) {
+        reject(err);
+    })
+}
+
 module.exports = {
     getWards,
     getTotalReports,
     getTotalUsers,
     getReports,
     getReport,
-    getComments
+    getComments,
+    markAsDone
 }

@@ -62,6 +62,20 @@ app.get("/report/comments", (req, res) => {
         .catch(console.log)
 })
 
+app.get("/report/mark", (req, res) => {
+    
+    let uid = req.query.uid;
+
+    db
+    .markAsDone(uid)
+    .then(() => {
+        res.json({
+            success : 1
+        });
+    })
+    .catch(console.log)
+})
+
 app.get("/reports/count", (req, res) => {
     db
         .getTotalReports()
