@@ -1,0 +1,37 @@
+[debug] [2018-10-06T05:49:37.331Z] ----------------------------------------------------------------------
+[debug] [2018-10-06T05:49:37.337Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Admin\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve
+[debug] [2018-10-06T05:49:37.337Z] CLI Version:   5.0.0
+[debug] [2018-10-06T05:49:37.337Z] Platform:      win32
+[debug] [2018-10-06T05:49:37.337Z] Node Version:  v8.9.4
+[debug] [2018-10-06T05:49:37.339Z] Time:          Sat Oct 06 2018 11:19:37 GMT+0530 (India Standard Time)
+[debug] [2018-10-06T05:49:37.339Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-10-06T05:49:37.422Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-10-06T05:49:37.423Z] > authorizing via signed-in user
+[debug] [2018-10-06T05:49:37.423Z] [iam] checking project voices-mumbai for permissions ["firebase.projects.get"]
+[debug] [2018-10-06T05:49:37.430Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-10-06T05:49:37.431Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-10-06T05:49:39.747Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-06T05:49:39.915Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/voices-mumbai:testIamPermissions  
+
+[debug] [2018-10-06T05:49:44.963Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-06T05:49:44.967Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/voices-mumbai  
+ 
+[debug] [2018-10-06T05:49:47.111Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'D:\Bhavin\Hackathon\kj-hackathon\server'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-10-06T05:49:59.612Z] Fetching environment
+[debug] [2018-10-06T05:49:59.617Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/470826047267:getServerAppConfig  
+ 
+[debug] [2018-10-06T05:49:59.619Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/470826047267/clients/_:getWebAppConfig  
+ 
+[debug] [2018-10-06T05:50:01.850Z] <<< HTTP RESPONSE 200
+[debug] [2018-10-06T05:50:01.851Z] Starting @google-cloud/functions-emulator
+[debug] [2018-10-06T05:50:01.952Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
+[debug] [2018-10-06T05:50:08.862Z] Parsing function triggers
+[info] +  functions: api: http://localhost:5001/voices-mumbai/us-central1/api
