@@ -17,9 +17,57 @@ app.get("/wards", (req, res) => {
             res.json(wardList);
         })
         .catch(console.log)
+})
 
+app.get("/users", (req, res) => {
+    db
+    .getTotalUsers()
+    .then((users) => {
+        res.json(users);
+    })
+    .catch(console.log)
+})
 
+app.get("/reports", (req, res) => {
+    db
+    .getReports()
+    .then((reports) => {
+        res.json(reports);
+    })
+    .catch(console.log)
+})
 
+app.get("/report", (req, res) => {
+    
+    let uid = req.query.uid;
+
+    db
+    .getReport(uid)
+    .then((report) => {
+        res.json(report);
+    })
+    .catch(console.log)
+})
+
+app.get("/report/comments", (req, res) => {
+    
+    let uid = req.query.uid;
+
+    db
+    .getComments(uid)
+    .then((report) => {
+        res.json(report);
+    })
+    .catch(console.log)
+})
+
+app.get("/reports/count", (req, res) => {
+    db
+    .getTotalReports()
+    .then((reports) => {
+        res.json(reports);
+    })
+    .catch(console.log)
 })
 
 const api = functions.https.onRequest(app)

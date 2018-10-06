@@ -7,8 +7,8 @@ function getWards(location) {
         ref.on("value", function (snapshot) {
             let wardsList = snapshot.val();
             let distList = [];
-            wardsList.forEach((ward,i) => {
-                distList.push([dist(ward.location.lat, ward.location.lng, location[0], location[1]),i])
+            wardsList.forEach((ward, i) => {
+                distList.push([dist(ward.location.lat, ward.location.lng, location[0], location[1]), i])
             });
             distList.sort();
             resolve([
@@ -21,12 +21,6 @@ function getWards(location) {
         });
     })
 }
-
-
-
-
-
-
 
 function dist(lat1, lon1, lat2, lon2) {
     var R = 6371; // km
@@ -45,8 +39,164 @@ function toRad(deg) {
     return deg * Math.PI / 180;
 }
 
+//Get total number of reports
+function getTotalReports() {
+    var solvedCount = 0, remainingCount = 0, count = 0;
 
+    return new Promise((resolve, reject) => {
+        var reportsRef = db.ref('reports');
+        reportsRef.on('value', function (snapshot) {
+            snapshot = snapshot.val();
+
+            if (snapshot === null) {
+                return;
+            }
+            else {
+                let keys = Object.keys(snapshot);
+                keys.forEach((report) => {
+                    count++;
+
+                    report = snapshot[report];
+
+                    if (report.hasOwnProperty('status')) {
+                        if (report.status === 1) {
+                            solvedCount++;
+                        }
+                        else {
+                            remainingCount++;
+                        }
+                    }
+                });
+
+                resolve({
+                    total: count,
+                    solved: solvedCount,
+                    remaining: remainingCount,
+                });
+            }
+        }, function (err) {
+            reject(err);
+        });
+    })
+}
+
+// Get Total Users
+function getTotalUsers() {
+    var count = 0;
+
+    return new Promise((resolve, reject) => {
+        var usersRef = db.ref('users');
+        usersRef.on('value', function (snapshot) {
+            snapshot = snapshot.val();
+
+            if (snapshot === null) {
+                return;
+            }
+            else {
+
+                let keys = Object.keys(snapshot);
+
+                keys.forEach((user) => {
+                    count++;
+                })
+                resolve({
+                    userCount: count
+                });
+            }
+        }), function (err) {
+            reject(err);
+        }
+    })
+}
+
+// Get List of Reports
+function getReports() {
+    var reports = [];
+
+    return new Promise((resolve, reject) => {
+        var reportsRef = db.ref('reports');
+        reportsRef.on('value', function (snapshot) {
+            snapshot = snapshot.val();
+
+            if (snapshot === null) {
+                return;
+            }
+            else {
+
+                let keys = Object.keys(snapshot);
+
+                keys.forEach((report) => {
+                    reports.push(snapshot[report]);
+                })
+                resolve(JSON.stringify(reports));
+            }
+        }), function (err) {
+            reject(err);
+        }
+    })
+}
+
+function getComments(uid) {
+    return new Promise((resolve, reject) => {
+        var reportsRef = db.ref('reports');
+
+        reportsRef.on('value', function (snapshot) {
+            snapshot = snapshot.val();
+
+            if (snapshot === null) {
+                return;
+            }
+            else {
+                
+                let keys = Object.keys(snapshot);
+
+                keys.forEach((report) => {
+                    if (snapshot[report].uid === uid)
+                    {
+                        resolve(JSON.stringify(snapshot[report].mComments));
+                        return;
+                    }
+                });
+            }
+        }), function (err) {
+            reject(err);
+        }
+    })
+}
+
+function getReport(uid) {
+    return new Promise((resolve, reject) => {
+        var reportsRef = db.ref('reports');
+
+        reportsRef.on('value', function (snapshot) {
+            snapshot = snapshot.val();
+
+            if (snapshot === null) {
+                return;
+            }
+            else {
+                
+                let keys = Object.keys(snapshot);
+
+                keys.forEach((report) => {
+                    if (snapshot[report].uid === uid)
+                    {
+                        resolve(snapshot[report]);
+                        return;
+                    }
+                });
+            }
+        }), function (err) {
+            reject(err);
+        }
+    })
+}
 
 module.exports = {
-    getWards
+    getWards,
+    getTotalReports,
+    getTotalUsers,
+    getReports,
+    getReport,
+    getComments
 }
