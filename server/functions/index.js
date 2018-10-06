@@ -6,21 +6,72 @@ admin.initializeApp();
 
 const db = require('./services/database');
 
-let addWard = functions.database.ref('/reports/')
-    .onCreate((snapshot, context) => {
-      const original = snapshot.val();
-      let location = [original.mLatitude, original.mLongitude];
-      return db
-                .getWards(location)
-                .then((wardList) => {
-                    original.ward = wardList[0].name;
-                    return snapshot.ref.set(original);
-                })
-                .catch(console.log)
-    });
+
+app.get("/wards", (req, res) => {
+
+    let lat = parseFloat(req.query.lat);
+    let lng = parseFloat(req.query.lng);
+
+    db
+        .getWards([lat, lng])
+        .then((ward) => {
+            res.json(ward);
+        })
+        .catch(console.log)
+})
+
+app.get("/users", (req, res) => {
+    db
+        .getTotalUsers()
+        .then((users) => {
+            res.json(users);
+        })
+        .catch(console.log)
+})
+
+app.get("/reports", (req, res) => {
+    db
+        .getReports()
+        .then((reports) => {
+            res.json(reports);
+        })
+        .catch(console.log)
+})
+
+app.get("/report", (req, res) => {
+
+    let uid = req.query.uid;
+
+    db
+        .getReport(uid)
+        .then((report) => {
+            res.json(report);
+        })
+        .catch(console.log)
+})
+
+app.get("/report/comments", (req, res) => {
+
+    let uid = req.query.uid;
+
+    db
+        .getComments(uid)
+        .then((report) => {
+            res.json(report);
+        })
+        .catch(console.log)
+})
+
+app.get("/reports/count", (req, res) => {
+    db
+        .getTotalReports()
+        .then((reports) => {
+            res.json(reports);
+        })
+        .catch(console.log)
+})
+
 const api = functions.https.onRequest(app)
-
-
 module.exports = {
-  api
+    api
 }

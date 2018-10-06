@@ -11,11 +11,9 @@ function getWards(location) {
                 distList.push([dist(ward.location.lat, ward.location.lng, location[0], location[1]), i])
             });
             distList.sort();
-            resolve([
-                wardsList[distList[0][1]],
-                wardsList[distList[1][1]],
-                wardsList[distList[2][1]]
-            ]);
+            resolve(
+                wardsList[distList[0][1]]
+            );
         }, function (errorObject) {
             reject(errorObject);
         });

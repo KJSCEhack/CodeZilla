@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.back.vom.MainActivity;
 import com.back.vom.R;
 import com.back.vom.models.Report;
+import com.back.vom.models.Ward;
 import com.back.vom.services.ReportService;
 import com.back.vom.utils.InitFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,15 +47,31 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -80,6 +97,8 @@ public class NewReports extends Fragment {
 
 
     Report mReport;
+
+    FirebaseFunctions mFirebaseFunctions;
 
 
     private View mView;
@@ -111,6 +130,8 @@ public class NewReports extends Fragment {
         database = FirebaseDatabase.getInstance();
 
         radioGroup = mView.findViewById(R.id.radioGroup);
+
+        mFirebaseFunctions = FirebaseFunctions.getInstance();
 
 
         mTitle = mView.findViewById(R.id.reportTitle);
@@ -340,16 +361,49 @@ public class NewReports extends Fragment {
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        if (location == null) {
+                        if(location == null) {
                             Toast.makeText(getContext(), "GPS IS OFF", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            startActivity(new Intent(getActivity(),MainActivity.class));
                             getActivity().finish();
-                        } else {
-                            mReport.setLatitude(location.getLatitude());
-                            mReport.setLongitude(location.getLongitude());
-
+                            return;
                         }
+                        mReport.setLatitude(location.getLatitude());
+                        mReport.setLongitude(location.getLongitude());
+                        run(location.getLatitude(),location.getLongitude());
                     }
                 });
+    }
+    void run(Double lat,Double lng) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://us-central1-voices-mumbai.cloudfunctions.net/api/wards").newBuilder();
+        urlBuilder.addQueryParameter("lat", String.valueOf(lat));
+        urlBuilder.addQueryParameter("lng", String.valueOf(lng));
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getContext(), "Failed to get ward", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: ",e);
+            }
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Gson g = new Gson();
+                Log.d(TAG, "onResponse: got Ward:");
+                try {
+                    Ward w = g.fromJson(response.body().string(),Ward.class);
+                    mReport.setWard(w);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 }

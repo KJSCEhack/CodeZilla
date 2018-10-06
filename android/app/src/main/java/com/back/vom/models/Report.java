@@ -13,7 +13,15 @@ public class Report {
     Boolean mVolunteer;
     String mDate;
 
-    public String ward;
+    public Ward getWard() {
+        return ward;
+    }
+
+    public void setWard(Ward ward) {
+        this.ward = ward;
+    }
+
+    public Ward ward;
 
     public ArrayList<String> mVolunteers = new ArrayList<String>();
 

@@ -17,6 +17,7 @@ import com.back.vom.R;
 import com.back.vom.adapters.YourReportsAdapter;
 import com.back.vom.models.Report;
 import com.back.vom.services.ReportService;
+import com.google.firebase.functions.FirebaseFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,10 @@ public class YourReports extends Fragment {
 
     YourReportsAdapter mYourReportsAdapter;
 
+    private FirebaseFunctions mFunctions;
+// ...
+
+
     List<Report> data = new ArrayList<>();
     /**
      * This method is used to display the step one fragment for signUp with User id,
@@ -65,9 +70,16 @@ public class YourReports extends Fragment {
         mYourReportsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mYourReportsRecyclerView.setAdapter(mYourReportsAdapter);
 
+        mFunctions = FirebaseFunctions.getInstance();
+
         getMyData();
         return mView;
     }
+
+
+
+
+
 
 
 

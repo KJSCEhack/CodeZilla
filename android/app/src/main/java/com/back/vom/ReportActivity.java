@@ -3,11 +3,11 @@ package com.back.vom;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.print.PrinterId;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -66,21 +66,24 @@ public class ReportActivity extends AppCompatActivity {
     Button mVolunteerBT;
 
 
-    List<String> commentsFormatted = new ArrayList<>();
+
+    List<String> commentsFormatted  = new ArrayList<>();
+
 
 
     StableArrayAdapter adapter;
 
 
-    private Report mReport;
-    private String uid;
 
+    private  Report mReport;
+    private String uid;
+    private String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
         ButterKnife.bind(this);
-        Intent i = getIntent();
+        Intent i  = getIntent();
         String id = i.getStringExtra(REPORT_ID);
 
         adapter = new StableArrayAdapter(this,
@@ -89,21 +92,21 @@ public class ReportActivity extends AppCompatActivity {
 
 
         uid = FirebaseAuth.getInstance().getUid();
+        name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         loadData(id);
     }
 
 
     public void upvote(View v) {
-        UpvoteService.upvote(mReport, null);
+        UpvoteService.upvote(mReport,null);
         loadUI();
     }
 
     public void volunteer(View v) {
-        VolunteerService.addVolunteer(mReport, uid, null, this);
+        VolunteerService.addVolunteer(mReport, uid,null,this);
         loadUI();
     }
-
-    public void comment(View v) {
+    public void  comment(View v) {
         final EditText taskEditText = new EditText(this);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Enter Comment")
@@ -114,8 +117,8 @@ public class ReportActivity extends AppCompatActivity {
                         Comment comment = new Comment();
                         comment.setCommentText(taskEditText.getText().toString());
                         comment.setUserId(uid);
-                        comment.setUserName(SFHandler.get(ReportActivity.this, "name"));
-                        CommentService.addComment(mReport, comment, null);
+                        comment.setUserName(name);
+                        CommentService.addComment(mReport,comment,null);
                         loadUI();
                     }
                 })
@@ -128,9 +131,9 @@ public class ReportActivity extends AppCompatActivity {
         ReportService.getReport(id, new ReportService.CompleteListener() {
             @Override
             public void complete(Object object) {
-                if (object instanceof Exception) {
+                if(object instanceof Exception) {
 
-                } else if (object instanceof Report) {
+                } else if(object instanceof Report) {
 
                     mReport = (Report) object;
                     commentsFormatted.clear();
@@ -140,27 +143,37 @@ public class ReportActivity extends AppCompatActivity {
         });
 
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void loadUI() {
-        if (mReport != null) {
+        if(mReport != null) {
             Picasso.get().load(mReport.getImageUrl()).into(mImageView);
-            mCategoryTV.setText("Cateory: " + mReport.getCategory());
-            mDescriptionTV.setText("Description: " + mReport.getDescription());
-            mVCountTV.setText("Total Volunteers: " + mReport.getmVolunteers().size());
-            mVDateTv.setText("Volunteer Date: " + mReport.getDate());
-            mUpvotesTV.setText("Upvotes: " + mReport.getUpvotes());
+            mCategoryTV.setText("Cateory: "+mReport.getCategory());
+            mDescriptionTV.setText("Description: "+mReport.getDescription());
+            mVCountTV.setText("Total Volunteers: "+mReport.getmVolunteers().size());
+            mVDateTv.setText("Volunteer Date: "+mReport.getDate());
+            mUpvotesTV.setText("Upvotes: "+mReport.getUpvotes());
+
+            if(!mReport.getVolunteer())
+                mVolunteerBT.setVisibility(View.GONE);
+            else mVolunteerBT.setVisibility(View.VISIBLE);
 
 
-            for (String volunteer : mReport.getmVolunteers()) {
-                if (volunteer.equals(uid)) {
+            for (String volunteer:mReport.getmVolunteers()) {
+                if(volunteer.equals(uid)) {
                     mVolunteerBT.setVisibility(GONE);
                     break;
                 }
             }
 
             commentsFormatted.clear();
-            for (Comment c : mReport.getmComments()) {
+            for (Comment c: mReport.getmComments()) {
                 commentsFormatted.add(c.getUserName() + ":\n" + c.getCommentText());
             }
             adapter.notifyDataSetChanged();
@@ -198,26 +211,5 @@ public class ReportActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.volunteers, menu);
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.volunteer_bt) {
-
-            Intent intent = new Intent(ReportActivity.this, VolunteersActivity.class);
-            VolunteersActivity.report = mReport;
-            startActivity(intent);
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 }

@@ -129,7 +129,7 @@ public class LocationReports extends Fragment implements OnMapReadyCallback,Loca
             public void complete(Object object) {
                 if(object instanceof  Exception) {
 
-                    Log.d("In Set data: ", "Exception occured!");
+                    Log.d("In Set data: ", "Exception occured!", (Throwable) object);
                     Toast.makeText(getContext(), "Error while collecting data!", Toast.LENGTH_SHORT).show();
 
                 } else {
