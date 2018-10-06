@@ -15,7 +15,7 @@ public class VolunteerService {
     public static void addVolunteer(Report report, String userId, DatabaseReference.CompletionListener listener, Context mContext) {
 
         if (report.getVolunteer()) {
-            report.mVolunteers.add(userId);
+            report.getmVolunteers().add(userId);
             reportsRef.child(report.getUid()).setValue(report,listener);
         } else {
 

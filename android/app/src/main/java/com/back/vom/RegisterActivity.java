@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
@@ -125,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void changeUsersDetails(FirebaseUser user) {
+    private void changeUsersDetails(final FirebaseUser user) {
         String email = mEmailET.getText().toString();
         final String name = mNameET.getText().toString();
         String phone = mPhoneET.getText().toString();
@@ -135,6 +136,10 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(RegisterActivity.this, "User Created", Toast.LENGTH_SHORT).show();
                 Intent i  = new Intent(RegisterActivity.this,MainActivity.class);
                 startActivity(i);
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(name)
+                        .build();
+                user.updateProfile(profileUpdates);
                 SFHandler.save(RegisterActivity.this,"name",name);
                 finish();
             }

@@ -48,6 +48,11 @@ public class ReportService {
                 GenericTypeIndicator<HashMap<String,Report>> t = new GenericTypeIndicator<HashMap<String,Report>>(){};
                 HashMap<String,Report> reportList = dataSnapshot.getValue(t);
                 List<Report> myList = new ArrayList<>();
+
+                if(reportList == null) {
+                    listener.complete(new Exception("Empty"));
+                    return;
+                }
                 for(Map.Entry<String, Report> entry : reportList.entrySet()) {
                     String key = entry.getKey();
                     Report value = entry.getValue();
@@ -72,12 +77,19 @@ public class ReportService {
                 GenericTypeIndicator<HashMap<String,Report>> t = new GenericTypeIndicator<HashMap<String,Report>>(){};
                 HashMap<String,Report> reportList = dataSnapshot.getValue(t);
                 List<Report> myList = new ArrayList<>();
+
+                if(reportList == null) {
+                    listener.complete(new Exception("Empty"));
+                    return;
+                }
+                Log.d(TAG, "onDataChange: Entries Exist");
+
                 for(Map.Entry<String, Report> entry : reportList.entrySet()) {
                     String key = entry.getKey();
                     Report value = entry.getValue();
                     myList.add(value);
                 }
-
+                listener.complete(myList);
             }
 
             @Override

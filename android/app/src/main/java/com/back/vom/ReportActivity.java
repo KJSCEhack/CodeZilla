@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,6 +30,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.View.GONE;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -55,6 +58,12 @@ public class ReportActivity extends AppCompatActivity {
 
     @BindView(R.id.comment_lv)
     ListView mCommentsLV;
+
+
+    @BindView(R.id.volunteer_bt)
+    Button mVolunteerBT;
+
+
 
     List<String> commentsFormatted  = new ArrayList<>();
 
@@ -90,7 +99,7 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     public void volunteer(View v) {
-        VolunteerService.addVolunteer(mReport, uid,null,this);
+        VolunteerService.addVolunteer(mReport, uid,null,this); loadUI();
     }
     public void  comment(View v) {
         final EditText taskEditText = new EditText(this);
@@ -104,8 +113,8 @@ public class ReportActivity extends AppCompatActivity {
                         comment.setCommentText(taskEditText.getText().toString());
                         comment.setUserId(uid);
                         comment.setUserName(SFHandler.get(ReportActivity.this,"name"));
-
-                        //CommentService.
+                        CommentService.addComment(mReport,comment,null);
+                        loadUI();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -142,13 +151,19 @@ public class ReportActivity extends AppCompatActivity {
             mUpvotesTV.setText("Upvotes: "+mReport.getUpvotes());
 
 
-            for (Comment c:
-            mReport.getmComments()) {
+
+            for (String volunteer:mReport.getmVolunteers()) {
+                if(volunteer.equals(uid)) {
+                    mVolunteerBT.setVisibility(GONE);
+                    break;
+                }
+            }
+
+            commentsFormatted.clear();
+            for (Comment c: mReport.getmComments()) {
                 commentsFormatted.add(c.getUserName() + ":\n" + c.getCommentText());
             }
             adapter.notifyDataSetChanged();
-
-
         }
     }
 
@@ -159,8 +174,14 @@ public class ReportActivity extends AppCompatActivity {
         public StableArrayAdapter(Context context, int textViewResourceId,
                                   List<String> objects) {
             super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            for (int i = 0; i < getCount(); ++i) {
+                mIdMap.put(getItem(i), i);
             }
         }
 

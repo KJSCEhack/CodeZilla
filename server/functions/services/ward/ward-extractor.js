@@ -31,7 +31,3 @@ for (let i = 0; i <= wardList.length-2; i+=3) {
     })
     .catch(console.log);
 }
-
-
-
-
