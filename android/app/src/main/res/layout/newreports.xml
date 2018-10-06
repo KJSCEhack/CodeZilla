@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -16,16 +18,22 @@
             android:layout_height="200dp" />
         <Button
             android:id="@+id/browse_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click Photo !" />
+            android:text="Click Photo"
+            style="@style/flatbutton"
+            android:gravity="center"
+            android:drawablePadding="10dp"
+            android:layout_gravity="center"
+            android:drawableRight="@drawable/ic_photo_camera"/>
 
         <EditText
             android:layout_marginTop="10dp"
             android:id="@+id/reportTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Report Title" />
+            android:hint="Report Title"
+            android:textSize="20dp"/>
 
         <EditText
             android:id="@+id/reportDescription"
