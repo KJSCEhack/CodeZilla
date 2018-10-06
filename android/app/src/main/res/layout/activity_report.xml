@@ -19,6 +19,52 @@
             android:layout_height="200dp"
             tools:src="@drawable/newamazon" />
 
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp">
+
+            <Button
+                android:id="@+id/upvote_bt"
+                style="@style/flatbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableRight="@drawable/ic_thumbs"
+                android:onClick="upvote"
+                android:text="Upvote" />
+
+
+
+            <Button
+                android:id="@+id/Comment_bt"
+                style="@style/flatbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableRight="@drawable/ic_mess"
+                android:onClick="comment"
+                android:text="comment"
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/volunteer_bt"
+            style="@style/flatbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/ic_volunteer"
+            android:onClick="volunteer"
+            android:text="Volunteer"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"/>
+
         <TextView
             android:id="@+id/report_category"
             android:layout_width="match_parent"
@@ -42,48 +88,6 @@
             tools:text="No of Volunteers"
             android:textSize="20sp"
             android:layout_marginLeft="10dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/upvote_bt"
-                style="@style/flatbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableRight="@drawable/ic_thumbs"
-                android:onClick="upvote"
-                android:text="Upvote" />
-
-            <Button
-                android:id="@+id/volunteer_bt"
-                style="@style/flatbutton"
-
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableRight="@drawable/ic_volunteer"
-                android:onClick="volunteer"
-                android:text="Volunteer" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/Comment_bt"
-            style="@style/flatbutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableRight="@drawable/ic_mess"
-            android:onClick="comment"
-            android:text="comment"
-            android:layout_gravity="center"/>
-
-
-
 
         <TextView
             android:id="@+id/report_upvotes"

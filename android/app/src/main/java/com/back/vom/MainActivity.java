@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity
     AlertDialog mDialog;
 
     View promptsView;
-    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +52,7 @@ public class MainActivity extends AppCompatActivity
         Bugsee.launch(this, "f6a25b56-b280-4e64-aa0c-d9809493d3d4");
 
         verifyUser();
-
-
-
-
-
+        InitFragment.set(MainActivity.this, mYourReports);
 
         setContentView(R.layout.activity_main);
 
@@ -65,17 +60,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-
-
-
-            }
-        });
-        fab.setVisibility(View.INVISIBLE);
         checkLocationPermission();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -136,19 +121,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.your_reports) {
-            fab.setVisibility(View.VISIBLE);
+
             InitFragment.set(MainActivity.this, mYourReports);
             Toast.makeText(this, "Your reports", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.location_reports) {
-            fab.setVisibility(View.VISIBLE);
+
             InitFragment.set(MainActivity.this, mLocationReports);
             Toast.makeText(this, "Location", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.new_report) {
-            fab.setVisibility(View.INVISIBLE);
+
             InitFragment.set(MainActivity.this, mNewReports);
             Toast.makeText(this, "New", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.faq) {
-            fab.setVisibility(View.VISIBLE);
+
             Toast.makeText(this, "FAQ", Toast.LENGTH_SHORT).show();
         }
 
