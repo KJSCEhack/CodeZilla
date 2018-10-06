@@ -27,10 +27,10 @@ public class VolunteerListService {
     static DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
 
 
-    public static ArrayList<String> getVolunteers(Report report) {
+    public static void getVolunteers(Report report, final ReportService.CompleteListener listener) {
 
 
-        ArrayList<String> usersId = report.getVolunteers();
+        final ArrayList<String> usersId = report.getVolunteers();
         final ArrayList<String> usernames = new ArrayList<String>();
 
         for(int i=0;i<usersId.size();i++) {
@@ -42,19 +42,11 @@ public class VolunteerListService {
                     User user = dataSnapshot.getValue(User.class);
                     usernames.add(user.getName());
 
-                    /*GenericTypeIndicator<HashMap<String, User>> t = new GenericTypeIndicator<HashMap<String,User>>(){};
-                    HashMap<String, User> userList = dataSnapshot.getValue(t);
+                    if(usernames.size() == usersId.size()) {
+                        listener.complete(usernames);
+                        return;
+                    }
 
-
-                    Log.d(TAG, "onDataChange: Entries Exist");
-                    if (userList != null) {
-
-                        for (Map.Entry<String, User> entry : userList.entrySet()) {
-                            String key = entry.getKey();
-                            User value = entry.getValue();
-                            usernames.add(value.getName());
-                        }
-                    }*/
                 }
 
                 @Override
@@ -62,9 +54,7 @@ public class VolunteerListService {
 
                 }
             });
-
         }
 
-        return usernames;
     }
 }

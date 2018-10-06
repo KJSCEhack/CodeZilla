@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.back.vom.models.Report;
+import com.back.vom.models.User;
+import com.back.vom.services.ReportService;
 import com.back.vom.services.VolunteerListService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VolunteersActivity extends AppCompatActivity {
 
@@ -21,11 +24,16 @@ public class VolunteersActivity extends AppCompatActivity {
 
 
         volunteersTextView = findViewById(R.id.volunteers_tv);
-        ArrayList<String> users = VolunteerListService.getVolunteers(report);
+        VolunteerListService.getVolunteers(report, new ReportService.CompleteListener() {
+            @Override
+            public void complete(Object object) {
+                List<User> users = (List<User>) object;
+                for(int i=0;i<users.size();i++) {
+                    volunteersTextView.append(users.get(i)+"\n" );
+                }
+            }
+        });
 
-        for(int i=0;i<users.size();i++) {
 
-            volunteersTextView.setText(volunteersTextView + "\n" + users.get(i));
-        }
     }
 }

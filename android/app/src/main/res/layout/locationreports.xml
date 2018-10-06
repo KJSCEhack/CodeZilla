@@ -11,8 +11,7 @@
         android:id="@+id/map"
         tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
-    android:layout_height="wrap_content"
-    android:text="Location Reports"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/location_reports_recyclerview"
