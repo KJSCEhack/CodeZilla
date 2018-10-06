@@ -7,40 +7,96 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Profile</title>
 
-  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
-  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <link rel="stylesheet" href="../assets/css/style.css">
-  
   <script src="../assets/js/jquery.min.js"></script>
-  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
   <!-- Axios -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 </head>
 
 <body>
-  <div class="container">
-    <div class="row" style="padding-top: 14%;">
-      <div class="col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
-        <div class="well profile">
-          <div class="col-sm-12">
-            <div class="col-xs-12 col-sm-8" id="details">
-              <h2 id="category">Lorem, ipsum dolor.</h2>
-              <strong>Upvotes: <p id="upvotes"></p></strong>
-              <p id="ward"></p>
-            </div>
-            <div class="col-xs-12 col-sm-4 text-center">
-              <figure>
-                <img alt="Image" id="image" class="img-circle img-responsive">
-              </figure>
+  <section style="padding-top: 100px;">
+    <div class="container py-3">
+      <div class="card">
+        <div class="row ">
+          <div class="col-md-4">
+            <img class="w-100" id="image">
+          </div>
+          <div class="col-md-8 px-3">
+            <div class="card-block px-3">
+              <br>
+              <div class="row">
+                <div class="col col-6">
+                  <h4 class="card-title" id="category">Lorem ipsum dolor sit amet</h4>
+                </div>
+                <div class="col col-3">
+                  <button type="button" class="btn btn-secondary" id="mark">Mark as done</button>
+                </div>
+                <div class="col col-3">
+                  <button type="button" class="btn btn-secondary" id="ward" data-toggle="modal" data-target="#exampleModal">Contact Ward</button>
+                </div>
+              </div>
+
+              UP VOTES: <p class="card-text" id="upvotes">0</p>
+              Description: <p id="desc"></p>
+              Latitude: <p id="lat"></p>
+              Longitude: <p id="lng"></p>
+
+              Comments:
+              <ul class="list-group" id="comment-list" style="padding: 1px 10px 10px;"></ul>
             </div>
           </div>
         </div>
       </div>
     </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Contact Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Name: <p id="name"></p>
+          Address: <p id="address"></p>
+          Contact Number: <p id="contact"></p>  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
+
 
   <!-- Routes -->
   <script src="../routes/profile-routes.js"></script>
+
+  <script>
+    $("#mark").on('click', function (e) {
+      axios
+        .get(`http://localhost:5001/voices-mumbai/us-central1/api/report/mark?uid=${uid}`)
+        .then((response) => {
+          let data = response.data;
+
+          if (data.success === 1)
+            alert('Marked done!');
+        })
+        .catch((err) => console.log(err));
+    });    
+  </script>
 
 </body>
 
