@@ -13,6 +13,16 @@ public class Report {
     Boolean mVolunteer;
     String mDate;
 
+    public Ward getWard() {
+        return ward;
+    }
+
+    public void setWard(Ward ward) {
+        this.ward = ward;
+    }
+
+    public Ward ward;
+
     public ArrayList<String> mVolunteers = new ArrayList<String>();
 
     public ArrayList<Comment> mComments = new ArrayList<Comment>();
@@ -41,7 +51,7 @@ public class Report {
     double mLatitude, mLongitude;
     int mReportDate;
 
-    Report() {
+    public Report() {
 
     }
 

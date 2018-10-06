@@ -3,11 +3,14 @@ package com.back.vom;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.print.PrinterId;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,6 +32,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.View.GONE;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -56,6 +61,12 @@ public class ReportActivity extends AppCompatActivity {
     @BindView(R.id.comment_lv)
     ListView mCommentsLV;
 
+
+    @BindView(R.id.volunteer_bt)
+    Button mVolunteerBT;
+
+
+
     List<String> commentsFormatted  = new ArrayList<>();
 
 
@@ -66,6 +77,7 @@ public class ReportActivity extends AppCompatActivity {
 
     private  Report mReport;
     private String uid;
+    private String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +92,7 @@ public class ReportActivity extends AppCompatActivity {
 
 
         uid = FirebaseAuth.getInstance().getUid();
+        name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         loadData(id);
     }
 
@@ -91,6 +104,7 @@ public class ReportActivity extends AppCompatActivity {
 
     public void volunteer(View v) {
         VolunteerService.addVolunteer(mReport, uid,null,this);
+        loadUI();
     }
     public void  comment(View v) {
         final EditText taskEditText = new EditText(this);
@@ -103,9 +117,9 @@ public class ReportActivity extends AppCompatActivity {
                         Comment comment = new Comment();
                         comment.setCommentText(taskEditText.getText().toString());
                         comment.setUserId(uid);
-                        comment.setUserName(SFHandler.get(ReportActivity.this,"name"));
-
-                        //CommentService.
+                        comment.setUserName(name);
+                        CommentService.addComment(mReport,comment,null);
+                        loadUI();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -132,6 +146,11 @@ public class ReportActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void loadUI() {
         if(mReport != null) {
             Picasso.get().load(mReport.getImageUrl()).into(mImageView);
@@ -141,14 +160,23 @@ public class ReportActivity extends AppCompatActivity {
             mVDateTv.setText("Volunteer Date: "+mReport.getDate());
             mUpvotesTV.setText("Upvotes: "+mReport.getUpvotes());
 
+            if(!mReport.getVolunteer())
+                mVolunteerBT.setVisibility(View.GONE);
+            else mVolunteerBT.setVisibility(View.VISIBLE);
 
-            for (Comment c:
-            mReport.getmComments()) {
+
+            for (String volunteer:mReport.getmVolunteers()) {
+                if(volunteer.equals(uid)) {
+                    mVolunteerBT.setVisibility(GONE);
+                    break;
+                }
+            }
+
+            commentsFormatted.clear();
+            for (Comment c: mReport.getmComments()) {
                 commentsFormatted.add(c.getUserName() + ":\n" + c.getCommentText());
             }
             adapter.notifyDataSetChanged();
-
-
         }
     }
 
@@ -159,8 +187,14 @@ public class ReportActivity extends AppCompatActivity {
         public StableArrayAdapter(Context context, int textViewResourceId,
                                   List<String> objects) {
             super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
+
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            for (int i = 0; i < getCount(); ++i) {
+                mIdMap.put(getItem(i), i);
             }
         }
 

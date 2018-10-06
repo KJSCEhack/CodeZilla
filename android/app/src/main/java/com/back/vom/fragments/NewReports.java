@@ -1,18 +1,22 @@
 package com.back.vom.fragments;
 
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,21 +37,41 @@ import android.widget.Toast;
 import com.back.vom.MainActivity;
 import com.back.vom.R;
 import com.back.vom.models.Report;
+import com.back.vom.models.Ward;
 import com.back.vom.services.ReportService;
 import com.back.vom.utils.InitFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -72,6 +96,10 @@ public class NewReports extends Fragment {
     Button mSubmitButton;
 
 
+    Report mReport;
+
+    FirebaseFunctions mFirebaseFunctions;
+
 
     private View mView;
     private ProgressBar mProgressBar;
@@ -85,10 +113,15 @@ public class NewReports extends Fragment {
     private DatePicker datePicker;
     private YourReports mYourReports = new YourReports();
 
+
+    private FusedLocationProviderClient mLocationProviderClient;
+    private Object mLoc;
+
     public NewReports() {
     }
 
     private int mYear, mMonth, mDay, mHour, mMinute;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,9 +131,13 @@ public class NewReports extends Fragment {
 
         radioGroup = mView.findViewById(R.id.radioGroup);
 
+        mFirebaseFunctions = FirebaseFunctions.getInstance();
+
 
         mTitle = mView.findViewById(R.id.reportTitle);
         mDescription = mView.findViewById(R.id.reportDescription);
+
+        mReport = new Report();
 
         yes = mView.findViewById(R.id.yesradiobutton);
         no = mView.findViewById(R.id.noradiobutton);
@@ -126,6 +163,8 @@ public class NewReports extends Fragment {
                 dispatchTakePictureIntent();
             }
         });
+
+        mLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -158,9 +197,9 @@ public class NewReports extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                               mSelectedDate =  dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                               mDate.setText(mSelectedDate);
-                                Toast.makeText(getActivity(),mSelectedDate, Toast.LENGTH_SHORT).show();
+                                mSelectedDate = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                                mDate.setText(mSelectedDate);
+                                Toast.makeText(getActivity(), mSelectedDate, Toast.LENGTH_SHORT).show();
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -168,8 +207,13 @@ public class NewReports extends Fragment {
 
             }
         });
+
+        getLoc();
+
+
         return mView;
     }
+
 
     private void validateReport() {
 
@@ -186,12 +230,12 @@ public class NewReports extends Fragment {
     }
 
 
-        private void dispatchTakePictureIntent() {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
 
 
     @Override
@@ -204,7 +248,7 @@ public class NewReports extends Fragment {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mPreviewImage.setImageBitmap(imageBitmap);
 
-            Uri tempUri = getImageUri(getContext(),imageBitmap);
+            Uri tempUri = getImageUri(getContext(), imageBitmap);
 
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             File finalFile = new File(getRealPathFromURI(tempUri));
@@ -274,9 +318,13 @@ public class NewReports extends Fragment {
                     //add report
                     //
 
-                    Log.d(TAG, "onComplete: "+downloadUri.toString());
-                    Report r  = new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, downloadUri.toString());
-                    ReportService.createReport(r);
+                    Log.d(TAG, "onComplete: " + downloadUri.toString());
+                    mReport.setCategory(mTitle.getText().toString());
+                    mReport.setDescription(mDescription.getText().toString());
+                    mReport.setVolunteer(mVolunteer);
+                    mReport.setDate(mSelectedDate);
+                    mReport.setImageUrl(downloadUri.toString());
+                    ReportService.createReport(mReport);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -303,5 +351,59 @@ public class NewReports extends Fragment {
         ContentResolver contentResolver = getActivity().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    public void getLoc() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location == null) {
+                            Toast.makeText(getContext(), "GPS IS OFF", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getActivity(),MainActivity.class));
+                            getActivity().finish();
+                            return;
+                        }
+                        mReport.setLatitude(location.getLatitude());
+                        mReport.setLongitude(location.getLongitude());
+                        run(location.getLatitude(),location.getLongitude());
+                    }
+                });
+    }
+    void run(Double lat,Double lng) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://us-central1-voices-mumbai.cloudfunctions.net/api/wards").newBuilder();
+        urlBuilder.addQueryParameter("lat", String.valueOf(lat));
+        urlBuilder.addQueryParameter("lng", String.valueOf(lng));
+
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getContext(), "Failed to get ward", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: ",e);
+            }
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Gson g = new Gson();
+                Log.d(TAG, "onResponse: got Ward:");
+                try {
+                    Ward w = g.fromJson(response.body().string(),Ward.class);
+                    mReport.setWard(w);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 }
