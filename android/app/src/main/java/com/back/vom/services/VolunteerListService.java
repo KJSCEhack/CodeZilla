@@ -39,10 +39,10 @@ public class VolunteerListService {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-//                    User user = (User) dataSnapshot.getValue();
-  //                  usernames.add(user.getName());
+                    User user = dataSnapshot.getValue(User.class);
+                    usernames.add(user.getName());
 
-                    GenericTypeIndicator<HashMap<String, User>> t = new GenericTypeIndicator<HashMap<String,User>>(){};
+                    /*GenericTypeIndicator<HashMap<String, User>> t = new GenericTypeIndicator<HashMap<String,User>>(){};
                     HashMap<String, User> userList = dataSnapshot.getValue(t);
 
 
@@ -54,7 +54,7 @@ public class VolunteerListService {
                             User value = entry.getValue();
                             usernames.add(value.getName());
                         }
-                    }
+                    }*/
                 }
 
                 @Override

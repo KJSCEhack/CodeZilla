@@ -12,8 +12,7 @@ public class Report {
 
     Boolean mVolunteer;
     String mDate;
-
-    public String ward;
+    
 
     public ArrayList<String> mVolunteers = new ArrayList<String>();
 
