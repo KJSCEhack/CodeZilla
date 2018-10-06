@@ -1,4 +1,5 @@
 var admin = require("firebase-admin");
+const _ = require('lodash');
 var db = admin.database();
 
 function getWards(location) {
@@ -126,6 +127,8 @@ function getReports() {
                 keys.forEach((report) => {
                     reports.push(snapshot[report]);
                 })
+
+                reports = _.orderBy(reports, 'upvotes', 'desc');
                 resolve(JSON.stringify(reports));
             }
         }), function (err) {
