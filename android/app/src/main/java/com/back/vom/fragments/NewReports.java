@@ -1,18 +1,22 @@
 package com.back.vom.fragments;
 
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,8 +39,11 @@ import com.back.vom.R;
 import com.back.vom.models.Report;
 import com.back.vom.services.ReportService;
 import com.back.vom.utils.InitFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -72,6 +79,8 @@ public class NewReports extends Fragment {
     Button mSubmitButton;
 
 
+    Report mReport;
+
 
     private View mView;
     private ProgressBar mProgressBar;
@@ -85,10 +94,15 @@ public class NewReports extends Fragment {
     private DatePicker datePicker;
     private YourReports mYourReports = new YourReports();
 
+
+    private FusedLocationProviderClient mLocationProviderClient;
+    private Object mLoc;
+
     public NewReports() {
     }
 
     private int mYear, mMonth, mDay, mHour, mMinute;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,6 +115,8 @@ public class NewReports extends Fragment {
 
         mTitle = mView.findViewById(R.id.reportTitle);
         mDescription = mView.findViewById(R.id.reportDescription);
+
+        mReport = new Report();
 
         yes = mView.findViewById(R.id.yesradiobutton);
         no = mView.findViewById(R.id.noradiobutton);
@@ -126,6 +142,8 @@ public class NewReports extends Fragment {
                 dispatchTakePictureIntent();
             }
         });
+
+        mLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -158,9 +176,9 @@ public class NewReports extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                               mSelectedDate =  dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                               mDate.setText(mSelectedDate);
-                                Toast.makeText(getActivity(),mSelectedDate, Toast.LENGTH_SHORT).show();
+                                mSelectedDate = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                                mDate.setText(mSelectedDate);
+                                Toast.makeText(getActivity(), mSelectedDate, Toast.LENGTH_SHORT).show();
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -168,8 +186,13 @@ public class NewReports extends Fragment {
 
             }
         });
+
+        getLoc();
+
+
         return mView;
     }
+
 
     private void validateReport() {
 
@@ -186,12 +209,12 @@ public class NewReports extends Fragment {
     }
 
 
-        private void dispatchTakePictureIntent() {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
 
 
     @Override
@@ -204,7 +227,7 @@ public class NewReports extends Fragment {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mPreviewImage.setImageBitmap(imageBitmap);
 
-            Uri tempUri = getImageUri(getContext(),imageBitmap);
+            Uri tempUri = getImageUri(getContext(), imageBitmap);
 
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             File finalFile = new File(getRealPathFromURI(tempUri));
@@ -274,9 +297,13 @@ public class NewReports extends Fragment {
                     //add report
                     //
 
-                    Log.d(TAG, "onComplete: "+downloadUri.toString());
-                    Report r  = new Report(mTitle.getText().toString(), mDescription.getText().toString(), mVolunteer, mSelectedDate, downloadUri.toString());
-                    ReportService.createReport(r);
+                    Log.d(TAG, "onComplete: " + downloadUri.toString());
+                    mReport.setCategory(mTitle.getText().toString());
+                    mReport.setDescription(mDescription.getText().toString());
+                    mReport.setVolunteer(mVolunteer);
+                    mReport.setDate(mSelectedDate);
+                    mReport.setImageUrl(downloadUri.toString());
+                    ReportService.createReport(mReport);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -303,5 +330,24 @@ public class NewReports extends Fragment {
         ContentResolver contentResolver = getActivity().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    public void getLoc() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location == null) {
+                            Toast.makeText(getContext(), "GPS IS OFF", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getActivity(),MainActivity.class));
+                            getActivity().finish();
+                        }
+                        mReport.setLatitude(location.getLatitude());
+                        mReport.setLongitude(location.getLongitude());
+                    }
+                });
     }
 }

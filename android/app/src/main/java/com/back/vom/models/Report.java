@@ -13,6 +13,8 @@ public class Report {
     Boolean mVolunteer;
     String mDate;
 
+    public String ward;
+
     public ArrayList<String> mVolunteers = new ArrayList<String>();
 
     public ArrayList<Comment> mComments = new ArrayList<Comment>();
@@ -41,7 +43,7 @@ public class Report {
     double mLatitude, mLongitude;
     int mReportDate;
 
-    Report() {
+    public Report() {
 
     }
 

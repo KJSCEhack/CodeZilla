@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+
     }
 
     public void verifyUser() {
@@ -120,9 +121,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        /*if (id == R.id.action_settings) {
-            return false;
-        }*/
+        if(id == R.id.action_logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this,LoginActivity.class));
+            finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -172,6 +175,8 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
